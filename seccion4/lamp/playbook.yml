@@ -1,0 +1,19 @@
+- hosts: all
+  vars:
+      dbhost: localhost
+      dbname: blog
+      dbuser: bloguser
+      dbpasswd: test123
+
+  tasks:
+    - name: Actualizar lista de paquetes
+      apt:
+        update_cache: yes
+    
+    - name: Instalar paquetes base
+      apt:
+        name: {{ item }}
+        state: latest
+        with_items:
+          [ vim, curl, build-essential, python-software-properties, git ]
+      
