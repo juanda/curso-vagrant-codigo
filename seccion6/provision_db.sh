@@ -9,7 +9,7 @@
 
 # Variables
 HOSTWEB=192.168.33.10
-DBHOST=localhost
+DBHOST=192.168.33.20
 DBNAME=blog
 DBUSER=bloguser
 DBPASSWD=test123
@@ -26,14 +26,13 @@ apt-get -y install vim curl build-essential python-software-properties git >> /v
 echo -e "\n--- Instalando paquetes de MySQL ---\n"
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $DBPASSWD"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $DBPASSWD"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/dbconfig-install boolean true"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/app-password-confirm password $DBPASSWD"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/admin-pass password $DBPASSWD"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/mysql/app-pass password $DBPASSWD"
-debconf-set-selections <<< "phpmyadmin phpmyadmin/reconfigure-webserver multiselect none"
-apt-get -y install mysql-server phpmyadmin >> /var/log/vm_build.log 2>&1
+apt-get -y install mysql-server >> /var/log/vm_build.log 2>&1
 
 echo -e "\n--- Configurando  MySQL: usuario y base de datos  ---\n"
 mysql -uroot -p$DBPASSWD -e "CREATE DATABASE $DBNAME" >> /var/log/vm_build.log 2>&1
 mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'" > /var/log/vm_build.log 2>&1
 mysql -uroot -p$DBPASSWD -e "grant all privileges on *.* to 'root'@'$HOSTWEB' identified by '$DBPASSWD'" > /var/log/vm_build.log 2>&1
+
+sed -i "s/127.0.0.1/$DBHOST/" /etc/mysql/mysql.conf.d/mysqld.cnf
+
+systemctl restart mysql.service

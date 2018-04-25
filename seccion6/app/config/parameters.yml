@@ -1,7 +1,7 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_host: localhost
-    database_port: null
+    database_host: 192.168.33.20
+    database_port: 3306
     database_name: blog
     database_user: root
     database_password: test123

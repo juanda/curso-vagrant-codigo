@@ -47,11 +47,11 @@ echo -e "\n--- Actualizando componentes del proyecto ---\n"
 
 cd /var/www/blog
 
-composer install >> /var/log/vm_build.log 2>&1
+# composer install >> /var/log/vm_build.log 2>&1
 
 echo -e "\n--- Configurando aplicación blog ---\n"
 
-sed -i "s/database_host: localhost/database_name: 192.168.33.20/" /var/www/blog/app/config/parameters.yml
+sed -i "s/database_host: localhost/database_host: 192.168.33.20/" /var/www/blog/app/config/parameters.yml
 sed -i "s/database_name: symfony/database_name: blog/" /var/www/blog/app/config/parameters.yml
 sed -i "s/database_user: root/database_user: root/" /var/www/blog/app/config/parameters.yml
 sed -i "s/database_password: root/database_password: test123/" /var/www/blog/app/config/parameters.yml
@@ -64,6 +64,6 @@ fi
 
 echo -e "\n--- Creando la base de datos y rellenándola ---\n"
 
-php /var/www/blog/bin/console doctrine:database:create >> /var/log/vm_build.log 2>&1
+#php /var/www/blog/bin/console doctrine:database:create >> /var/log/vm_build.log 2>&1
 php /var/www/blog/bin/console doctrine:schema:create >> /var/log/vm_build.log 2>&1
 php /var/www/blog/bin/console doctrine:fixtures:load >> /var/log/vm_build.log 2>&1
